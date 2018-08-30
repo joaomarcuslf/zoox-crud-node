@@ -6,6 +6,9 @@ const ApplicationController = new (require('../controllers/application-controlle
 
 const AuthRoute = require('./auth');
 
+/**
+ * GET /{organization}/{version}/
+ */
 router.get('/', ApplicationController.health);
 
 router.use('/auth', AuthRoute);
