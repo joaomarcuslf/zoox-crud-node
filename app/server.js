@@ -2,8 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const cors = require('./middlewares/allowCors');
-const noIcon = require('./middlewares/noIcon');
+const cors = require('./middlewares/allow-cors');
+const noIcon = require('./middlewares/no-icon');
+const notFound = require('./middlewares/not-found');
 
 const routes = require('./routes');
 
@@ -21,11 +22,6 @@ application.use(noIcon());
 
 application.use('/api/v1', routes);
 
-application.use((request, response) => {
-  response.status(404).send({
-    error: 'ERROR: NOT FOUND',
-    message: 'Resource could not be found',
-  });
-});
+application.use(notFound());
 
 module.exports = application;
