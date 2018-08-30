@@ -2,5 +2,33 @@
   "name": "zoox-crud-node",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "author": "João Marcus Fernandes <jmarcusfernandes@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start:prod": "node index.js",
+    "start:dev": "nodemon index.js",
+    "test:all": "npm run lint && npm run test",
+    "lint": "eslint app configs tests index",
+    "test": "jest tests"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "crypto": "0.0.3",
+    "express": "^4.14.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.17.1",
+    "mongodb": "^2.2.16",
+    "mongoose": "^4.7.8",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "eslint": "4.19.1",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-prettier": "2.6.0",
+    "jest": "^23.5.0",
+    "nodemon": "^1.11.0",
+    "prettier": "1.11.1",
+    "superagent": "^3.8.3",
+    "supertest": "^3.1.0"
+  }
 }
