@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const expressSanitizer = require('express-sanitizer');
 
 const cors = require('./middlewares/allow-cors');
 const noIcon = require('./middlewares/no-icon');
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 application.use(bodyParser.urlencoded({ extended: true }));
 application.use(bodyParser.json());
-
+application.use(expressSanitizer());
 application.use(cors());
 application.use(noIcon());
 
