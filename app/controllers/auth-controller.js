@@ -1,5 +1,4 @@
-const moment = require('../helpers/time-helper');
-const jwt = require('jwt-simple');
+const TokenManager = require('../helpers/token-manager');
 
 const ApplicationController = require('./application-controller');
 const configs = require('../../configs');
@@ -7,8 +6,6 @@ const configs = require('../../configs');
 class AuthController extends ApplicationController {
   constructor(props) {
     super(props);
-
-    this.secret = configs.secret;
   }
 
   /**
@@ -18,12 +15,9 @@ class AuthController extends ApplicationController {
    * @returns {void}
    */
   getToken(req, res) {
-    const now = moment().add(3, 'hours');
-    const authObject = {
-      expires: now.toISOString(),
-    };
+    const Manager = new TokenManager(configs);
 
-    const token = jwt.encode(authObject, configs.secret);
+    const token = Manager.createToken();
 
     res.json({ token: token });
   }
