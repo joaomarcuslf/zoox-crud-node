@@ -15,37 +15,30 @@ module.exports = function() {
   return function(req, res, next) {
     const token = req.headers['X-Api-Key'];
 
-    if (!token) {
-      res.status(errors.INVALID_TOKEN.status).send({
-        error: errors.INVALID_TOKEN.error,
-        message: errors.INVALID_TOKEN.message,
-      });
-      return;
-    } else {
-      try {
-        const decodedToken = jwt.encode(token, configs.secret);
-        const isExpired = moment(decodedToken.expires).isBefore(moment());
-
-        if (isExpired) {
-          res.status(errors.EXPIRED_TOKEN.status).send({
-            error: errors.EXPIRED_TOKEN.error,
-            message: errors.EXPIRED_TOKEN.message,
-          });
-          return;
-        } else {
-          res.auth = {
-            valid: true,
-            token,
-          };
-
-          return next();
-        }
-      } catch (err) {
-        res.status(errors.NO_TOKEN.status).send({
-          error: errors.NO_TOKEN.error,
-          message: errors.NO_TOKEN.message,
+    return validateToken(token)
+      .then(next)
+      .catch(error => {
+        res.status(error.status).send({
+          error: error.error,
+          message: error.message,
         });
-      }
-    }
+      });
   };
+};
+
+const validateToken = token => {
+  return new Promise((resolve, reject) => {
+    if (!token) return reject(errors.NO_TOKEN);
+
+    try {
+      const decodedToken = jwt.encode(token, configs.secret);
+      const isExpired = moment(decodedToken.expires).isBefore(moment());
+
+      if (isExpired) return reject(errors.EXPIRED_TOKEN);
+
+      return resolve();
+    } catch (e) {
+      return reject(errors.NO_TOKEN);
+    }
+  });
 };
