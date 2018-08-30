@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+
 // const validateToken = require('../middlewares/validate-token');
+// router.use('/', validateToken());
 
 const ApplicationController = new (require('../controllers/application-controller'))();
 
