@@ -11,6 +11,12 @@ class AuthController extends ApplicationController {
     this.secret = configs.secret;
   }
 
+  /**
+   * Will create an jwt for authentication
+   * @param {object} req request object from express
+   * @param {object} res response object from express
+   * @returns {void}
+   */
   getToken(req, res) {
     const now = moment().add(3, 'hours');
     const authObject = {
