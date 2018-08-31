@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const EstadoController = new (require('../controllers/estado-controller'))();
+const Controller = require('../controllers/estado-controller');
+
+const EstadoController = new Controller();
 
 /**
  * GET /{organization}/{version}/estado
@@ -13,12 +15,12 @@ router
   .post(EstadoController.add);
 
 /**
- * GET /{organization}/{version}/estado/:estadoId
- * PUT /{organization}/{version}/estado/:estadoId
- * DELETE /{organization}/{version}/estado/:estadoId
+ * GET /{organization}/{version}/estado/:id
+ * PUT /{organization}/{version}/estado/:id
+ * DELETE /{organization}/{version}/estado/:id
  */
 router
-  .route('/:estadoId')
+  .route('/:id')
   .get(EstadoController.getById)
   .put(EstadoController.update)
   .delete(EstadoController.delete);
