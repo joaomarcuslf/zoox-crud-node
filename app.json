@@ -1,0 +1,8 @@
+{
+  "name": "Zoox-crud-node",
+  "description": "A rest API using Node and Express",
+  "repository": "https://github.com/joaomarcuslf/zoox-crud-node",
+  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
+  "keywords": ["node", "express", "heroku"],
+  "image": "heroku/nodejs"
+}
