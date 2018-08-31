@@ -1,6 +1,6 @@
 const moment = require('../../../app/helpers/time-helper');
 
-const mockedObj = [
+let mockedObj = [
   {
     _id: '1',
     nome: 'São Paulo',
@@ -22,7 +22,13 @@ const mockedObj = [
 const Mock = jest.fn().mockImplementation(() => ({
   get: () => {
     return new Promise(resolve => {
-      resolve(mockedObj);
+      resolve(
+        mockedObj.map(obj => {
+          return Object.assign({}, obj, {
+            toJSON: () => obj,
+          });
+        })
+      );
     });
   },
   getById: id => {

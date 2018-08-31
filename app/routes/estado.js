@@ -15,6 +15,11 @@ router
   .post(EstadoController.add);
 
 /**
+ * GET /{organization}/{version}/estado/search
+ */
+router.route('/search').get(EstadoController.search);
+
+/**
  * GET /{organization}/{version}/estado/:id
  * PUT /{organization}/{version}/estado/:id
  * DELETE /{organization}/{version}/estado/:id
