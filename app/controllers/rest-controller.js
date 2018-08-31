@@ -1,4 +1,4 @@
-const { bindAll } = require('lodash');
+const { bindAll, get } = require('lodash');
 
 const ApplicationController = require('./application-controller');
 
@@ -13,7 +13,18 @@ class RestController extends ApplicationController {
     this._Model = new Model();
 
     // The above methods should be binded to this
-    bindAll(this, ['getAll', 'getById', 'add', 'update', 'delete']);
+    bindAll(this, [
+      'getAll',
+      'getById',
+      'add',
+      'update',
+      'delete',
+      'search',
+      '_search',
+      '_parseQuery',
+      '_getAggregationFilters',
+      '_getFullAggregation',
+    ]);
   }
 
   /**
@@ -28,12 +39,9 @@ class RestController extends ApplicationController {
     return Model.get()
       .then(data => res.json(data))
       .catch((err = {}) => {
-        const { INVALID_FIELDS, GENERIC_ERROR } = errors;
+        const { GENERIC_ERROR } = errors;
 
-        res.status(INVALID_FIELDS.status).json({
-          error: GENERIC_ERROR.error,
-          message: err,
-        });
+        return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
       });
   }
 
@@ -51,12 +59,9 @@ class RestController extends ApplicationController {
     return Model.getById(query)
       .then(data => res.json(data))
       .catch((err = {}) => {
-        const { INVALID_FIELDS, GENERIC_ERROR } = errors;
+        const { GENERIC_ERROR } = errors;
 
-        res.status(INVALID_FIELDS.status).json({
-          error: GENERIC_ERROR.error,
-          message: err,
-        });
+        return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
       });
   }
 
@@ -78,22 +83,11 @@ class RestController extends ApplicationController {
 
         switch (err.name) {
           case 'ValidationError':
-            return res.status(INVALID_FIELDS.status).json({
-              error: INVALID_FIELDS.error,
-              message: INVALID_FIELDS.message,
-              invalidFields: Object.keys(err.errors),
-            });
+            return this.sendError(res, INVALID_FIELDS, { invalidFields: Object.keys(err.errors) });
           case 'MongoError':
-            return res.status(INVALID_FIELDS.status).json({
-              error: INVALID_FIELDS.error,
-              message: INVALID_FIELDS.message,
-              errorMessage: err.errmsg,
-            });
+            return this.sendError(res, INVALID_FIELDS, { errorMessage: err });
           default:
-            return res.status(INVALID_FIELDS.status).json({
-              error: GENERIC_ERROR.error,
-              message: err,
-            });
+            return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
         }
       });
   }
@@ -113,15 +107,9 @@ class RestController extends ApplicationController {
     return Model.update(id, body)
       .then(data => res.json(data))
       .catch((err = {}) => {
-        const { INVALID_FIELDS, GENERIC_ERROR } = errors;
+        const { GENERIC_ERROR } = errors;
 
-        switch (err.name) {
-          default:
-            return res.status(INVALID_FIELDS.status).json({
-              error: GENERIC_ERROR.error,
-              message: err,
-            });
-        }
+        return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
       });
   }
 
@@ -139,16 +127,145 @@ class RestController extends ApplicationController {
     return Model.delete(id)
       .then(data => res.json(data))
       .catch((err = {}) => {
-        const { INVALID_FIELDS, GENERIC_ERROR } = errors;
+        const { GENERIC_ERROR } = errors;
 
-        switch (err.name) {
+        return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
+      });
+  }
+
+  /**
+   * Search Methods
+   */
+
+  /**
+   * Will get the data from entity with query
+   * @param {object} req request object from express
+   * @param {object} res response object from express
+   * @returns {promise} request data
+   */
+  search(req, res) {
+    return this._search(req.query)
+      .then(data => {
+        return res.json(data);
+      })
+      .catch((err = '') => {
+        const { EMPTY_SEARCH, GENERIC_ERROR, INVALID_QUERY, SERVER_ERROR } = errors;
+
+        switch (err) {
+          case 'NoContent':
+            return this.sendError(res, EMPTY_SEARCH, { total: 0 });
+          case 'InvalidQuery':
+            return this.sendError(res, INVALID_QUERY, { total: 0 });
+          case 'ServerError':
+            return this.sendError(res, SERVER_ERROR);
           default:
-            return res.status(INVALID_FIELDS.status).json({
-              error: GENERIC_ERROR.error,
-              message: err,
-            });
+            return this.sendError(res, GENERIC_ERROR, { serverMessage: err });
         }
       });
+  }
+
+  /**
+   * Will make the search with safe treatment
+   * @param {object} requestQuery query from the user
+   * @returns {promise} request data
+   */
+  _search(requestQuery = {}) {
+    return new Promise((resolve, reject) => {
+      try {
+        const Model = this._Model;
+
+        const query = this._parseQuery(requestQuery.filter);
+
+        const userQuery = this._getAggregationFilters(query);
+
+        return Model.get(userQuery)
+          .then((data = []) => {
+            let searchObject = {
+              total: data.length,
+              content: {},
+              selectedFilters: query,
+              aggregations: {},
+            };
+
+            if (!(requestQuery.aggregations === 'false')) searchObject['aggregations'] = this._getFullAggregation(data);
+
+            if (!(requestQuery.content === 'false')) searchObject['content'] = data.map(data => data.toJSON());
+
+            return searchObject;
+          })
+          .then(resolve)
+          .catch(reject);
+      } catch (exception) {
+        return reject(exception);
+      }
+    });
+  }
+
+  /**
+   * Will parse the query with safe treatment
+   * @param {array} rawQuery query from the user
+   * @returns {array} parsed query
+   */
+  _parseQuery(rawQuery = []) {
+    const query = typeof rawQuery === 'string' ? [rawQuery] : rawQuery;
+
+    return query.map(query => {
+      try {
+        return JSON.parse(query);
+      } catch (exception) {
+        console.log(exception);
+        throw 'InvalidQuery';
+      }
+    });
+  }
+
+  /**
+   * Will format the aggregation to MongoDB query
+   * @param {array} query query from the user
+   * @returns {object} parsed query
+   */
+  _getAggregationFilters(query = []) {
+    return query.reduce((acc, nxt) => {
+      try {
+        const { type, value } = nxt;
+
+        if (!type || !value) throw 'Invalid Query';
+
+        return Object.assign({}, acc, {
+          [type]: value,
+        });
+      } catch (exception) {
+        console.log(exception);
+        throw 'InvalidQuery';
+      }
+    }, {});
+  }
+
+  /**
+   * Will get all options from MongoDB object
+   * @param {array} data data from mongoDB
+   * @returns {object} full aggregation
+   */
+  _getFullAggregation(data = []) {
+    return data.reduce((acc, nxt = {}) => {
+      try {
+        const item = nxt.toJSON();
+        const keys = Object.keys(item).filter(key => key !== '__v');
+
+        const newAcc = acc;
+
+        keys.forEach(key => {
+          const oldFilters = get(acc, [key], []);
+
+          newAcc[key] = oldFilters.concat({ type: key, value: item[key] });
+        });
+
+        return newAcc;
+      } catch (exception) {
+        console.log(exception);
+        throw 'ServerError';
+      }
+    }, {});
   }
 }
 

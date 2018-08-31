@@ -27,7 +27,13 @@ const mockedObj = [
 const Mock = jest.fn().mockImplementation(() => ({
   get: () => {
     return new Promise(resolve => {
-      resolve(mockedObj);
+      resolve(
+        mockedObj.map(obj => {
+          return Object.assign({}, obj, {
+            toJSON: () => obj,
+          });
+        })
+      );
     });
   },
   getById: id => {
@@ -72,7 +78,7 @@ const Mock = jest.fn().mockImplementation(() => ({
 
         if (!ob) throw 'Error';
 
-        const newState = Object.assign(ob, rawState, {
+        const newState = Object.assign({}, ob, rawState, {
           dataDeAtualizacao: moment().toISOString(),
         });
 

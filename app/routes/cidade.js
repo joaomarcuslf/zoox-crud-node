@@ -15,6 +15,11 @@ router
   .post(CidadeController.add);
 
 /**
+ * GET /{organization}/{version}/cidade/search
+ */
+router.route('/search').get(CidadeController.search);
+
+/**
  * GET /{organization}/{version}/cidade/:id
  * PUT /{organization}/{version}/cidade/:id
  * DELETE /{organization}/{version}/cidade/:id

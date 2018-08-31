@@ -122,5 +122,44 @@ describe('Test Routes', () => {
           });
       });
     });
+
+    describe('GET /estado/search', () => {
+      test('should have status 401 without header', () => {
+        return request(app)
+          .get('/api/v1/estado/search')
+          .expect(401);
+      });
+
+      test('should have status 200 with header', () => {
+        return request(app)
+          .get('/api/v1/estado/search')
+          .set('x-api-key', token)
+          .query({ content: 'false' })
+          .expect(200);
+      });
+
+      test('should have body with array', () => {
+        return request(app)
+          .get('/api/v1/estado/search')
+          .set('x-api-key', token)
+          .query({ content: 'false' })
+          .then(response => {
+            expect(typeof response.body).toBe('object');
+            expect(response.body.total).toBeDefined();
+            expect(response.body.selectedFilters).toBeDefined();
+            expect(response.body.aggregations).toBeDefined();
+          });
+      });
+
+      test('should have the selected aggregations', () => {
+        return request(app)
+          .get('/api/v1/estado/search')
+          .set('x-api-key', token)
+          .query({ content: 'false', filter: [JSON.stringify({ type: '_id', value: 1 })] })
+          .then(response => {
+            expect(response.body.selectedFilters).toEqual([{ type: '_id', value: 1 }]);
+          });
+      });
+    });
   });
 });
