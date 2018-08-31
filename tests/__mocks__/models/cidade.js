@@ -3,19 +3,24 @@ const moment = require('../../../app/helpers/time-helper');
 const mockedObj = [
   {
     _id: '1',
-    nome: 'São Paulo',
-    abreviacao: 'SP',
-    dataDeCriacao: '2018-08-31T01:03:43.405Z',
-    dataDeAtualizacao: '2018-08-31T01:03:43.405Z',
-    __v: 0,
+    nome: 'Rio de Janeiro',
+    estadoId: '2',
+    dataDeCriacao: '2018-08-31T15:52:58.342Z',
+    dataDeAtualizacao: '2018-08-31T15:52:58.342Z',
   },
   {
     _id: '2',
-    nome: 'Minas Gerais',
-    abreviacao: 'MG',
-    dataDeCriacao: '2018-08-31T01:21:23.537Z',
-    dataDeAtualizacao: '2018-08-31T01:21:23.537Z',
-    __v: 0,
+    nome: 'Niterói',
+    estadoId: '2',
+    dataDeCriacao: '2018-08-31T15:53:12.852Z',
+    dataDeAtualizacao: '2018-08-31T15:53:12.853Z',
+  },
+  {
+    _id: '3',
+    nome: 'Sorocaba',
+    estadoId: '1',
+    dataDeCriacao: '2018-08-31T15:57:36.944Z',
+    dataDeAtualizacao: '2018-08-31T15:57:36.944Z',
   },
 ];
 
@@ -28,7 +33,7 @@ const Mock = jest.fn().mockImplementation(() => ({
   getById: id => {
     return new Promise((resolve, reject) => {
       try {
-        const ob = mockedObj.find(estado => estado._id === id);
+        const ob = mockedObj.find(cidade => cidade._id === id);
         if (!ob) throw 'Could not find document';
 
         resolve(ob);
@@ -47,8 +52,8 @@ const Mock = jest.fn().mockImplementation(() => ({
 
     return new Promise((resolve, reject) => {
       try {
-        const ob = mockedObj.find(estado => estado.nome === newState.nome || estado.abreviacao === newState.abreviacao);
-        const isInvalid = !newState.nome || !newState.abreviacao;
+        const ob = mockedObj.find(cidade => cidade.nome === newState.nome);
+        const isInvalid = !newState.nome || !newState.estadoId;
 
         if (ob || isInvalid) throw 'Error';
 
@@ -63,7 +68,7 @@ const Mock = jest.fn().mockImplementation(() => ({
   update: (id, rawState) => {
     return new Promise((resolve, reject) => {
       try {
-        const ob = mockedObj.find(estado => estado._id === id);
+        const ob = mockedObj.find(cidade => cidade._id === id);
 
         if (!ob) throw 'Error';
 
@@ -82,7 +87,7 @@ const Mock = jest.fn().mockImplementation(() => ({
   delete: id => {
     return new Promise((resolve, reject) => {
       try {
-        const filteredOb = mockedObj.filter(estado => estado._id !== id);
+        const filteredOb = mockedObj.filter(cidade => cidade._id !== id);
 
         if (filteredOb.length === mockedObj.length) throw 'Error';
 
@@ -96,4 +101,4 @@ const Mock = jest.fn().mockImplementation(() => ({
   },
 }));
 
-jest.mock('../../../app/models/estado.js', () => Mock);
+jest.mock('../../../app/models/cidade.js', () => Mock);

@@ -7,6 +7,7 @@ const ApplicationController = new (require('../controllers/application-controlle
 
 const AuthRoutes = require('./auth');
 const EstadoRoutes = require('./estado');
+const CidadeRoutes = require('./cidade');
 
 /**
  * GET /{organization}/{version}/
@@ -17,5 +18,8 @@ router.use('/auth', AuthRoutes);
 
 router.use('/estado', validateToken());
 router.use('/estado', EstadoRoutes);
+
+router.use('/cidade', validateToken());
+router.use('/cidade', CidadeRoutes);
 
 module.exports = router;

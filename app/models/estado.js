@@ -1,43 +1,14 @@
-const mongooseConnection = require('../../configs/db');
+const ApplicationModel = require('./application-model');
 
-const moment = require('../helpers/time-helper');
+const mongooseConnection = require('../../configs/db');
 
 const StateSchema = require('./schema/estado');
 
 const StateModel = mongooseConnection.model('Estado', StateSchema);
 
-class Estado {
-  constructor() {}
-
-  get(query = {}) {
-    return StateModel.find(query);
-  }
-
-  getById(id) {
-    return StateModel.findById(id);
-  }
-
-  create(rawState) {
-    const newState = Object.assign({}, rawState, {
-      dataDeCriacao: rawState.dataDeCriacao ? rawState.dataDeCriacao : moment().toISOString(),
-      dataDeAtualizacao: moment().toISOString(),
-    });
-
-    const State = new StateModel(newState);
-
-    return State.save();
-  }
-
-  update(id, rawState) {
-    const newState = Object.assign({}, rawState, {
-      dataDeAtualizacao: moment().toISOString(),
-    });
-
-    return StateModel.findOneAndUpdate({ _id: id }, newState);
-  }
-
-  delete(id) {
-    return StateModel.remove({ _id: id });
+class Estado extends ApplicationModel {
+  constructor() {
+    super(StateModel);
   }
 }
 
