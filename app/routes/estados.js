@@ -6,8 +6,8 @@ const Controller = require('../controllers/estado-controller');
 const EstadoController = new Controller();
 
 /**
- * GET /{organization}/{version}/estado
- * POST /{organization}/{version}/estado
+ * GET /{version}/estados
+ * POST /{version}/estados
  */
 router
   .route('/')
@@ -15,14 +15,14 @@ router
   .post(EstadoController.add);
 
 /**
- * GET /{organization}/{version}/estado/search
+ * GET /{version}/estados/search
  */
 router.route('/search').get(EstadoController.search);
 
 /**
- * GET /{organization}/{version}/estado/:id
- * PUT /{organization}/{version}/estado/:id
- * DELETE /{organization}/{version}/estado/:id
+ * GET /{version}/estados/:id
+ * PUT /{version}/estados/:id
+ * DELETE /{version}/estados/:id
  */
 router
   .route('/:id')

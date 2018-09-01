@@ -2,12 +2,14 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const expressSanitizer = require('express-sanitizer');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../docs/swagger.json');
 
 const cors = require('./middlewares/allow-cors');
 const noIcon = require('./middlewares/no-icon');
 const notFound = require('./middlewares/not-found');
 
-const routes = require('./routes');
+const routes = require('./routes/v1');
 
 const application = express();
 
@@ -21,7 +23,8 @@ application.use(expressSanitizer());
 application.use(cors());
 application.use(noIcon());
 
-application.use('/api/v1', routes);
+application.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+application.use('/v1', routes);
 
 application.use(notFound());
 

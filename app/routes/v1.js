@@ -6,20 +6,20 @@ const validateToken = require('../middlewares/validate-token');
 const ApplicationController = new (require('../controllers/application-controller'))();
 
 const AuthRoutes = require('./auth');
-const EstadoRoutes = require('./estado');
-const CidadeRoutes = require('./cidade');
+const EstadoRoutes = require('./estados');
+const CidadeRoutes = require('./cidades');
 
 /**
- * GET /{organization}/{version}/
+ * GET /{version}/
  */
 router.get('/', ApplicationController.health);
 
 router.use('/auth', AuthRoutes);
 
-router.use('/estado', validateToken());
-router.use('/estado', EstadoRoutes);
+router.use('/estados', validateToken());
+router.use('/estados', EstadoRoutes);
 
-router.use('/cidade', validateToken());
-router.use('/cidade', CidadeRoutes);
+router.use('/cidades', validateToken());
+router.use('/cidades', CidadeRoutes);
 
 module.exports = router;

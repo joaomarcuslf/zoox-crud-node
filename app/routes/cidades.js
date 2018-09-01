@@ -6,8 +6,8 @@ const Controller = require('../controllers/cidade-controller');
 const CidadeController = new Controller();
 
 /**
- * GET /{organization}/{version}/cidade
- * POST /{organization}/{version}/cidade
+ * GET /{version}/cidades
+ * POST /{version}/cidades
  */
 router
   .route('/')
@@ -15,14 +15,14 @@ router
   .post(CidadeController.add);
 
 /**
- * GET /{organization}/{version}/cidade/search
+ * GET /{version}/cidades/search
  */
 router.route('/search').get(CidadeController.search);
 
 /**
- * GET /{organization}/{version}/cidade/:id
- * PUT /{organization}/{version}/cidade/:id
- * DELETE /{organization}/{version}/cidade/:id
+ * GET /{version}/cidades/:id
+ * PUT /{version}/cidades/:id
+ * DELETE /{version}/cidades/:id
  */
 router
   .route('/:id')

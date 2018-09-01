@@ -1,0 +1,478 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "zoox-crud-node",
+    "description": "A rest API using Node and Express",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "https://gentle-spire-77002.herokuapp.com",
+  "basePath": "/v1",
+  "tags": [{
+      "name": "Estados",
+      "description": "API for consuming resources from Estados"
+    },
+    {
+      "name": "Cidades",
+      "description": "API for consuming resources from Cidades"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Gee the health check from the application",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Health"
+            }
+          }
+        }
+      }
+    },
+    "/auth": {
+      "get": {
+        "summary": "Gee the health check from the application",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      }
+    },
+    "/estados": {
+      "get": {
+        "tags": ["Estados"],
+        "summary": "Get all Estados in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Estados"
+            }
+          },
+          "400": {
+            "description": "Some error in getting the Estados has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Estados"],
+        "description": "Create new estado in system",
+        "parameters": [{
+          "name": "estado",
+          "in": "body",
+          "description": "Estado to be created",
+          "schema": {
+            "$ref": "#/definitions/Estado"
+          }
+        }],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Estado is created",
+            "schema": {
+              "$ref": "#/definitions/Estado"
+            }
+          },
+          "400": {
+            "description": "Invalid Fields, description with invalidFields",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/estados/{id}": {
+      "get": {
+        "tags": ["Estados"],
+        "summary": "Get Estado with given ID",
+        "responses": {
+          "200": {
+            "description": "Estado is found",
+            "schema": {
+              "$ref": "#/definitions/Estado"
+            }
+          },
+          "400": {
+            "description": "Some error in getting the Estado has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Estado with given ID",
+        "tags": ["Estados"],
+        "parameters": [{
+          "name": "estado",
+          "in": "body",
+          "description": "Estado with new values of properties",
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Estado is updated",
+            "schema": {
+              "$ref": "#/definitions/Estado"
+            }
+          },
+          "400": {
+            "description": "Some error in updating the Estado has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Estado with given ID",
+        "tags": ["Estados"],
+        "responses": {
+          "200": {
+            "description": "Estado is deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Some error in deleting the Estado has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/estados/search": {
+      "parameters": [{
+          "name": "aggregations",
+          "in": "path",
+          "description": "Will disable the aggregations field to reduce request size",
+          "type": "boolean"
+        },
+        {
+          "name": "content",
+          "in": "path",
+          "description": "Will disable the content field to reduce request size",
+          "type": "boolean"
+        },
+        {
+          "name": "filter",
+          "in": "path",
+          "description": "Filter query in pattern: { type: 'filterName', value: 'value' }",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Estados"],
+        "summary": "Get Estado or Estados with given ID",
+        "responses": {
+          "200": {
+            "description": "Estado is found",
+            "schema": {
+              "$ref": "#/definitions/Search"
+            }
+          },
+          "400": {
+            "description": "Error in requesting search",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/cidades": {
+      "get": {
+        "tags": ["Cidades"],
+        "summary": "Get all Cidades in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cidades"
+            }
+          },
+          "400": {
+            "description": "Some error in getting the Cidades has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cidades"],
+        "description": "Create new cidade in system",
+        "parameters": [{
+          "name": "cidade",
+          "in": "body",
+          "description": "Cidade to be created",
+          "schema": {
+            "$ref": "#/definitions/Cidade"
+          }
+        }],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Cidade is created",
+            "schema": {
+              "$ref": "#/definitions/Cidade"
+            }
+          },
+          "400": {
+            "description": "Invalid Fields, description with invalidFields",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/cidades/{id}": {
+      "get": {
+        "tags": ["Cidades"],
+        "summary": "Get Cidade with given ID",
+        "responses": {
+          "200": {
+            "description": "Cidade is found",
+            "schema": {
+              "$ref": "#/definitions/Cidade"
+            }
+          },
+          "400": {
+            "description": "Some error in getting the Cidade has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Cidade with given ID",
+        "tags": ["Cidades"],
+        "parameters": [{
+          "name": "cidade",
+          "in": "body",
+          "description": "Cidade with new values of properties",
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Cidade is updated",
+            "schema": {
+              "$ref": "#/definitions/Cidade"
+            }
+          },
+          "400": {
+            "description": "Some error in updating the Cidade has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Cidade with given ID",
+        "tags": ["Cidades"],
+        "responses": {
+          "200": {
+            "description": "Cidade is deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Some error in deleting the Cidade has ocurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/cidades/search": {
+      "parameters": [{
+          "name": "aggregations",
+          "in": "path",
+          "description": "Will disable the aggregations field to reduce request size",
+          "type": "boolean"
+        },
+        {
+          "name": "content",
+          "in": "path",
+          "description": "Will disable the content field to reduce request size",
+          "type": "boolean"
+        },
+        {
+          "name": "filter",
+          "in": "path",
+          "description": "Filter query in pattern: { type: 'filterName', value: 'value' }",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": ["Cidades"],
+        "summary": "Get Cidade or Cidades with given ID",
+        "responses": {
+          "200": {
+            "description": "Cidade is found",
+            "schema": {
+              "$ref": "#/definitions/Search"
+            }
+          },
+          "400": {
+            "description": "Error in requesting search",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Cidade": {
+      "required": [
+        "nome",
+        "estadoId"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "nome": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "estadoId": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "dataDeCriacao": {
+          "type": "string"
+        },
+        "dataDeAtualizacao": {
+          "type": "string"
+        }
+      }
+    },
+    "Cidades": {
+      "type": "array",
+      "$ref": "#/definitions/Cidade"
+    },
+    "Estado": {
+      "required": [
+        "nome",
+        "abreviacao"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "nome": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "abreviacao": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "dataDeCriacao": {
+          "type": "string"
+        },
+        "dataDeAtualizacao": {
+          "type": "string"
+        }
+      }
+    },
+    "Estados": {
+      "type": "array",
+      "$ref": "#/definitions/Estado"
+    },
+    "Search": {
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "content": {
+          "type": "array",
+          "$ref": "#/definitions/Estados"
+        },
+        "selectedFilters": {
+          "type": "array",
+          "$ref": "#/definitions/Query"
+        },
+        "aggregations": {
+          "type": "object"
+        }
+      }
+    },
+    "Query": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "properties": {
+        "status": {
+          "type": "integer"
+        },
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Health": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Token": {
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
