@@ -1,12 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const cacheControl = require('express-cache-controller');
 const expressSanitizer = require('express-sanitizer');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../docs/swagger.json');
 
-const cors = require('./middlewares/allow-cors');
 const noIcon = require('./middlewares/no-icon');
 const notFound = require('./middlewares/not-found');
 
