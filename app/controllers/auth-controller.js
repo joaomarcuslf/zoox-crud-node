@@ -19,6 +19,8 @@ class AuthController extends ApplicationController {
 
     const token = Manager.createToken();
 
+    res.cacheControl = { private: true, maxAge: 1800 };
+
     res.json({ token: token });
   }
 }
