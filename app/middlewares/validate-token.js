@@ -11,7 +11,8 @@ module.exports = function() {
    * @returns {void}
    */
   return function(req, res, next) {
-    const token = req.headers['x-api-key'];
+    const token = req.headers['X-Api-Key'] || req.headers['x-api-key'];
+
     const Manager = new TokenManager(configs);
 
     return Manager.validateToken(token)
