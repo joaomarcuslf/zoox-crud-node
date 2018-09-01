@@ -182,7 +182,7 @@ class RestController extends ApplicationController {
           .then((data = []) => {
             let searchObject = {
               total: data.length,
-              content: {},
+              content: [],
               selectedFilters: query,
               aggregations: {},
             };

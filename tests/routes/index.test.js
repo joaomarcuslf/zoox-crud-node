@@ -6,7 +6,7 @@ describe('Test Routes', () => {
     describe('GET /', () => {
       test('should have status 200', () => {
         return request(app)
-          .get('/api/v1')
+          .get('/v1')
           .expect(200)
           .then(response => {
             expect(response.body.message).toBeDefined();

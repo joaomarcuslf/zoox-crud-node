@@ -6,7 +6,7 @@ describe('Test Routes', () => {
     describe('GET /auth', () => {
       test('should have status 200', () => {
         return request(app)
-          .get('/api/v1/auth')
+          .get('/v1/auth')
           .expect(200)
           .then(response => {
             expect(response.body.token).toBeDefined();
