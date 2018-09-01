@@ -24,6 +24,7 @@ class RestController extends ApplicationController {
       '_parseQuery',
       '_getAggregationFilters',
       '_getFullAggregation',
+      '_sanitizeBody',
     ]);
   }
 
@@ -54,9 +55,9 @@ class RestController extends ApplicationController {
   getById(req, res) {
     const Model = this._Model;
 
-    const query = req.params.id || {};
+    const id = req.sanitize(req.params.id);
 
-    return Model.getById(query)
+    return Model.getById(id)
       .then(data => res.json(data))
       .catch((err = {}) => {
         const { GENERIC_ERROR } = errors;
@@ -74,7 +75,7 @@ class RestController extends ApplicationController {
   add(req, res) {
     const Model = this._Model;
 
-    const body = req.body || {};
+    const body = this._sanitizeBody(req, req.body);
 
     return Model.create(body)
       .then(data => res.json(data))
@@ -101,8 +102,8 @@ class RestController extends ApplicationController {
   update(req, res) {
     const Model = this._Model;
 
-    const id = req.params.id;
-    const body = req.body || {};
+    const id = req.sanitize(req.params.id);
+    const body = this._sanitizeBody(req, req.body);
 
     return Model.update(id, body)
       .then(data => res.json(data))
@@ -265,6 +266,18 @@ class RestController extends ApplicationController {
         console.log(exception);
         throw 'ServerError';
       }
+    }, {});
+  }
+
+  /**
+   * Will sanitize body
+   * @param {object} req request object
+   * @param {object} unsafeBody unsanitized body
+   * @returns {object} sanitized body
+   */
+  _sanitizeBody(req, unsafeBody = []) {
+    return Object.keys(unsafeBody).reduce((acc, nxt) => {
+      return Object.assign({}, acc, { [nxt]: req.sanitize(unsafeBody[nxt]) });
     }, {});
   }
 }
