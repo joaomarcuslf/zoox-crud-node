@@ -34,8 +34,8 @@ GET      /v1/cidades         # Get all the data from {cidade}
 POST     /v1/cidades         # Add new entry for {cidade}
 GET      /v1/cidades/search  # Fetch entities from {cidade} with query
 GET      /v1/cidades/:id     # Get a specific entry from {cidade}
-PUT      /v1/cidades/:id      # Update a specific entry from {cidade}
-DELETE   /v1/cidades/:id      # Delete a specific entry from {cidade}
+PUT      /v1/cidades/:id     # Update a specific entry from {cidade}
+DELETE   /v1/cidades/:id     # Delete a specific entry from {cidade}
 ```
 
 > Made by: [@joaomarcuslf](http://joaomarcuslf.github.io/)
