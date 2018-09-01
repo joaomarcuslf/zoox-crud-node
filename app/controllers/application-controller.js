@@ -17,6 +17,8 @@ class ApplicationController {
    * @returns {void}
    */
   sendError(res, errorObj, opts = {}) {
+    res.cacheControl = { noCache: true };
+
     return res.status(errorObj.status).json(
       Object.assign(
         {},
