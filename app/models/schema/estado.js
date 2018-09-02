@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const StateSchema = new Schema({
   nome: { type: String, required: true, unique: true },
-  abreviacao: { type: String, required: true, unique: true },
+  abreviacao: { type: String, required: true, unique: true, uppercase: true },
   dataDeCriacao: { type: String, required: true },
   dataDeAtualizacao: { type: String, required: true },
 });
