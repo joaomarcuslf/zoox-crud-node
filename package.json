@@ -23,7 +23,7 @@
     "express-cache-controller": "^1.1.0",
     "express-sanitizer": "^1.0.4",
     "jwt-simple": "^0.5.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.21",
     "mongodb": "^2.2.16",
